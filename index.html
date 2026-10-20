@@ -697,6 +697,13 @@ function strengthText(P){
   else t += '這些優勢最常出現在他真正感興趣的事情上，可以多留意那些讓他主動投入的時刻。';
   return t;
 }
+function quietText(P){
+  if(!P.broad && P.relTop.length){
+    const names = P.relTop.map(k=>'「'+DIMS[k].name+'」').join('');
+    return '從您的觀察來看，孩子在'+names+'方面的表現比較常看到，可以從這裡開始，陪他多試試、多玩玩。';
+  }
+  return BROAD_LEAD;
+}
 function parentProfile(){
   const sum={}, cnt={};
   DIM_ORDER.forEach(k=>{ sum[k]=0; cnt[k]=0; });
@@ -710,19 +717,22 @@ function parentProfile(){
   const quiet = strengths.length===0;
   const rare = S.cards.filter(v=>v===0).length;
   const broad = rare >= RARE_LIMIT;
-  return { dims, top:strengths, strengths, quiet, none:false, allAvg, rare, broad };
+  const minAvg = Math.min(...answered.map(x=>x.avg));
+  // 沒有明顯強項時，找出相對較常看到的面向（各面向都一樣就不挑）
+  const relTop = (quiet && max>minAvg) ? answered.filter(x=>x.avg===max).map(x=>x.k) : [];
+  return { dims, top:strengths, strengths, quiet, none:false, allAvg, rare, broad, relTop };
 }
 SCREENS.parentResult = () => {
   const P = parentProfile();
   let strengthHTML, tipsHTML = '';
   if(P.none) strengthHTML = '<p>這次還沒有作答。可以回到家長觀察樹屋，想到再填。</p>';
-  else if(P.broad){
-    strengthHTML = `<p>${esc(P.quiet ? BROAD_LEAD : strengthText(P))}</p>`;
-    const tips = BROAD_TIPS.slice();
-    P.strengths.forEach(k=>tips.push(DIMS[k].tips[0]));
+  else if(P.quiet || P.broad){
+    strengthHTML = `<p>${esc(P.quiet ? quietText(P) : strengthText(P))}</p>`;
+    const tips = [];
+    (P.quiet ? (P.broad ? [] : P.relTop) : P.strengths).forEach(k=>tips.push(DIMS[k].tips[0]));
+    BROAD_TIPS.forEach(t=>tips.push(t));
     tipsHTML = `<h2 class="rh">陪伴建議</h2><ul class="tips">${tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`;
   }
-  else if(P.quiet) strengthHTML = '<p>這次回想到的表現不多。很多特質只在特定情境出現，例如遇到真正有興趣的主題時，或在學校、才藝課裡。接下來可以多留意孩子主動投入的時刻。</p>';
   else {
     strengthHTML = `<p>${esc(strengthText(P))}</p>`;
     const tips = [];
@@ -1155,7 +1165,7 @@ SCREENS.g3 = () => {
 function memoData(){
   const P = parentProfile(), parent = [];
   if(!P.none){
-    parent.push(P.broad && P.quiet ? BROAD_LEAD : P.quiet ? '這次回想到的表現不多，接下來可以多留意孩子主動投入的時刻。' : strengthText(P));
+    parent.push(P.quiet ? quietText(P) : strengthText(P));
   }
   const did = [], talk = [];
   const nums = ['一','二','三','四','五'];
