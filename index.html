@@ -168,7 +168,9 @@ ul.clean li:last-child{border-bottom:none}
 
 /* ---------- 四年級：星陣拼圖 ---------- */
 .matrix{width:100%;max-width:340px;display:block;margin:0 auto}
-.shopts.four{grid-template-columns:repeat(4,1fr)}
+.shopts.four{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.shopts.four .shopt{min-height:0;min-width:0;border-radius:14px;padding:4px}
+.shopts.four .shopt svg{width:82%;height:82%}
 
 /* ---------- 四年級：小偵探事務所 ---------- */
 .clues{list-style:none;padding:0;margin:0 0 10px}
@@ -395,6 +397,85 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
   .island{max-height:none;max-width:300px}
   .homeTop{grid-template-columns:1fr 1fr;align-items:center}
 }
+
+/* =========================================================
+   響應式：小手機／手機橫放／平板直放／平板橫放與電腦
+   ========================================================= */
+button,a,[data-act]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app{padding-bottom:max(48px,env(safe-area-inset-bottom))}
+.board,.sky,.matrix{max-width:min(100%,440px)}
+
+/* 小手機（寬 380 以下，如 iPhone SE） */
+@media (max-width:380px){
+  .app{padding:12px 12px 40px}
+  .tbtn{padding:0 9px;font-size:.88rem}
+  .panel{padding:14px}
+  .mascot{width:58px;height:58px}
+  .scene{aspect-ratio:16/8}
+  .num{min-width:46px;height:48px;font-size:1.25rem}
+  .numopt{min-height:62px;font-size:1.45rem}
+  .shopts{gap:8px}
+  .slots{gap:5px}
+  .slot{min-height:76px;padding:4px;font-size:.88rem}
+  .slot .who{font-size:1.6rem}
+  .slot small{font-size:.7rem;white-space:normal;text-align:center;line-height:1.25}
+  .btns.two{gap:8px}
+}
+
+/* 手機橫放：高度很矮，縮小場景圖讓題目留在畫面裡 */
+@media (orientation:landscape) and (max-height:520px){
+  .scene{aspect-ratio:auto;height:64px}
+  .scene .stitle{bottom:50%;transform:translateY(50%)}
+  .guide{margin:8px 0}
+  .mascot{width:52px;height:52px}
+  .board,.sky,.matrix{max-width:min(100%,62vh)}
+}
+
+/* 平板直放（寬 768 以上） */
+@media (min-width:768px){
+  :root{--tap:52px}
+  html{font-size:17px} html.big{font-size:20px}
+  .app{max-width:880px;padding:20px 24px 56px}
+  .panel{padding:22px 24px}
+  .board,.sky,.matrix{max-width:min(100%,500px)}
+  .shopts{max-width:520px;margin-left:auto;margin-right:auto}
+  .numopts{max-width:520px;margin-left:auto;margin-right:auto}
+  .stations{grid-template-columns:1fr 1fr}
+  .grades{grid-template-columns:1fr 1fr}
+  .grade{min-height:120px}
+  .slot{min-height:96px}
+}
+
+/* 平板橫放與電腦（寬 1024 以上的橫向畫面）：遊戲改成左右兩欄 */
+@media (min-width:1024px) and (orientation:landscape){
+  .app{max-width:1200px}
+  .app.read{max-width:900px}
+  .app.game{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:24px;align-items:start}
+  .app.game > *{grid-column:1}
+  .app.game > .panel{grid-column:2;grid-row:1 / span 6;margin-top:6px}
+  .app.game > .scene{aspect-ratio:4/3}
+  .app.game .board,.app.game .sky,.app.game .matrix{max-width:min(100%,50vh,520px)}
+  .app.game .shopts,.app.game .numopts{max-width:min(100%,62vh,520px)}
+  .stations{grid-template-columns:1fr 1fr}
+}
+
+/* 手機橫放：遊戲也改成左右兩欄，左邊小光、右邊題目 */
+@media (orientation:landscape) and (max-height:520px) and (min-width:640px){
+  .app{max-width:none;padding:8px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
+  .app.game{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);column-gap:16px;align-items:start}
+  .app.game > *{grid-column:1}
+  .app.game > .panel{grid-column:2;grid-row:1 / span 6;margin-top:6px;padding:12px 14px}
+  .app.game .board,.app.game .sky,.app.game .matrix{max-width:min(100%,56vh)}
+  .app.game .shopts,.app.game .numopts{max-width:min(100%,80vh);margin-left:auto;margin-right:auto}
+  .app.game .shopt{min-height:0}
+  .app.game .howto{margin:4px 0 8px;padding:6px 10px}
+}
+
+/* 有滑鼠的裝置才顯示滑過效果 */
+@media (hover:hover){
+  .btn:not(:disabled):hover,.station:hover,.grade:hover{filter:brightness(1.05)}
+  .numopt:not(:disabled):hover,.shopt:not(:disabled):hover,.slot:not(:disabled):hover,.card6:hover{border-color:var(--teal-d)}
+}
 </style>
 </head>
 <body>
@@ -418,7 +499,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v16',
+  version: 'v17',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -629,6 +710,7 @@ function render(){
   try{
     const f = SCREENS[S.screen] || SCREENS.home;
     main.innerHTML = f();
+    main.className = 'app ' + (/^g[1-7]$/.test(S.screen) ? 'game' : S.screen==='home' ? 'homeV' : 'read');
     $('#btnBack').hidden = (S.screen==='home');
     $('#btnIsland').hidden = (S.screen==='home');
     $('#btnEnroll').hidden = (S.screen==='enroll');
@@ -1288,24 +1370,37 @@ SCREENS.g4 = () => {
    格子寫法：'圖形代號' 或 '圖形代號*數量'；null 是空格
    ========================================================= */
 const G5_ROUNDS = [
-  { grid:[['C','T','Q'],['T','Q','C'],['Q','C',null]], ans:'T', opts:['C','T','Q'],
-    hint:'每一列、每一行裡，圓形、三角形、方形都各出現一次。' },
-  { grid:[['C*1','C*2','C*3'],['T*1','T*2','T*3'],['Q*1','Q*2',null]], ans:'Q*3', opts:['Q*2','T*3','Q*3'],
-    hint:'橫的一列看形狀，直的一行數一數有幾個。' },
-  { grid:[['R','rt','rq'],['B','bt',null],['G','gt','gq']], ans:'bq', opts:['bt','gq','bq','rq'],
-    hint:'顏色看橫的一列，形狀看直的一行。' }
+  // 1 旋轉：每往右一格，箭頭順時針轉 90 度；每一列的起點也依序轉
+  { grid:[['au','ar','ad'],['ar','ad','al'],['ad','al',null]], ans:'au', opts:['al','ad','au','ar'],
+    hint:'每往右一格，箭頭都朝同一個方向轉。' },
+  // 2 疊圖：左邊兩格疊在一起，兩格都有的線會消失
+  { grid:[['L:h','L:v','L:h,v'],['L:h,d1','L:h,d2','L:d1,d2'],['L:v,c','L:c,d1',null]], ans:'L:v,d1', opts:['L:v,c,d1','L:v,d1','L:c','L:v,d2'],
+    hint:'把左邊兩格疊在一起看：兩格都有的線，到了第三格會怎麼樣？' },
+  // 3 三種規律：形狀、顏色、數量，每一列、每一行都各出現一次
+  { grid:[['R*1','gt*2','bq*3'],['bt*3','rq*1','G*2'],['gq*2','B*3',null]], ans:'rt*1', opts:['rt*2','gt*1','rt*1','rq*1'],
+    hint:'形狀、顏色、數量分開看，每一列、每一行都各出現一次。' }
 ];
+function lineSVG(spec, cx, cy, size){
+  const h = size*.34, st = 'stroke="#18243B" stroke-width="4" stroke-linecap="round" fill="none"';
+  const d = { h:`<line x1="${cx-h}" y1="${cy}" x2="${cx+h}" y2="${cy}" ${st}/>`, v:`<line x1="${cx}" y1="${cy-h}" x2="${cx}" y2="${cy+h}" ${st}/>`,
+    d1:`<line x1="${cx-h}" y1="${cy-h}" x2="${cx+h}" y2="${cy+h}" ${st}/>`, d2:`<line x1="${cx+h}" y1="${cy-h}" x2="${cx-h}" y2="${cy+h}" ${st}/>`,
+    c:`<circle cx="${cx}" cy="${cy}" r="${h*.55}" ${st}/>` };
+  return `<rect x="${cx-h}" y="${cy-h}" width="${2*h}" height="${2*h}" fill="none" stroke="#cdbd9b" stroke-width="2" stroke-dasharray="4 4"/>`
+    + spec.slice(2).split(',').map(k=>d[k]||'').join('');
+}
+const LINE_NAME = { h:'橫線', v:'直線', d1:'左上到右下的斜線', d2:'右上到左下的斜線', c:'圓圈' };
 function cellSVG(spec, cx, cy, size){
+  if(String(spec).indexOf('L:')===0) return lineSVG(spec, cx, cy, size);
   const m = String(spec).split('*'), k = m[0], n = +(m[1]||1);
   if(n===1) return shapeSVG(k, cx, cy, size*.78);
   const sz = size*.42, d = size*.24;
   const pos = n===2 ? [[-d,0],[d,0]] : [[0,-d],[-d,d*.9],[d,d*.9]];
   return pos.map(p=>shapeSVG(k, cx+p[0], cy+p[1], sz)).join('');
 }
-function cellName(spec){ const m = String(spec).split('*'); return (m[1]&&m[1]!=='1'?m[1]+' 個':'')+SHAPE_NAME[m[0]]; }
+function cellName(spec){ if(String(spec).indexOf('L:')===0) return spec.slice(2).split(',').map(k=>LINE_NAME[k]).join('加'); const m = String(spec).split('*'); return (m[1]&&m[1]!=='1'?m[1]+' 個':'')+SHAPE_NAME[m[0]]; }
 function matrixSVG(R, solved){
   const C = 96, G = 6;
-  return `<svg class="matrix" viewBox="0 0 ${C*3+G*4} ${C*3+G*4}" role="img" aria-label="九宮格，右下或中間有一格是問號">
+  return `<svg class="matrix" viewBox="0 0 ${C*3+G*4} ${C*3+G*4}" role="img" aria-label="九宮格，右下角有一格是問號">
     <rect width="100%" height="100%" rx="14" fill="#223150"/>
     ${R.grid.map((row,r)=>row.map((v,c)=>{
       const x = G+c*(C+G), y = G+r*(C+G), empty = v===null;
@@ -1321,7 +1416,7 @@ SCREENS.g5 = () => {
   ${guide('九宮格裡藏著規律。哪一個圖案可以補上空格？', g.roundSolved?'happy':'think')}
   <div class="panel">
     ${dots(n, g.round, g.roundSolved)}
-    <p class="howto">橫的看一看、直的看一看，再選出空格裡的圖案</p>
+    <p class="howto">${['看箭頭怎麼轉，選出右下角的圖案','看看第三格是怎麼從前兩格變出來的','形狀、顏色、數量都要對，選出右下角的圖案'][Math.min(g.round,2)]}</p>
     ${matrixSVG(R, g.roundSolved)}
     <div class="shopts ${R.opts.length===4?'four':''}" role="group" aria-label="選一個圖案">
       ${R.opts.map(k=>`<button class="shopt ${g.roundSolved&&k===R.ans?'right':''}" data-act="g5pick" data-k="${k}" aria-label="${esc(cellName(k))}" ${g.roundSolved?'disabled':''}>
