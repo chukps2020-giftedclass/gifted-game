@@ -376,7 +376,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v14',
+  version: 'v15',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -517,8 +517,9 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&am
 function say(t){ const l=$('#live'); l.textContent=''; setTimeout(()=>{ l.textContent=t; },30); }
 function anyProgress(){ return S.cards.some(x=>x!=null) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0; }
 // 圖片插槽：圖檔存在就淡入，不存在就保留程式畫的備用圖
-function artOK(img){ img.parentElement.classList.add('has-art'); }
-function artNo(img){ img.remove(); }
+// 換頁後才載入完成的圖片已不在畫面上，要先確認還有外框再處理
+function artOK(img){ const box = img && img.parentElement; if(box) box.classList.add('has-art'); }
+function artNo(img){ if(img && img.parentElement) img.remove(); }
 function imgSlot(src, alt){ return `<img src="${esc(src)}" alt="${esc(alt||'')}" decoding="async" onload="artOK(this)" onerror="artNo(this)">`; }
 
 /* ---------- 聲音（預設關閉） ---------- */
