@@ -148,6 +148,48 @@ ul.clean li:last-child{border-bottom:none}
 .station .ic{font-size:1.9rem;width:44px;text-align:center;flex:none}
 .station b{display:block;font-size:1.08rem}
 .station .st{margin-left:auto;font-size:.82rem;white-space:nowrap}
+.station .gr{display:inline-block;margin-top:4px}
+.grades{display:grid;gap:12px;margin:12px 0}
+.grade{display:block;text-align:left;padding:14px 16px;border-radius:16px;border:none;cursor:pointer;color:var(--ink);font-size:1rem;min-height:88px}
+.grade.low{background:var(--teal)} .grade.mid{background:var(--gold)}
+.grade b{display:block;font-size:1.18rem;margin-bottom:2px}
+.grade span{display:block;color:var(--ink2);font-size:.92rem}
+
+/* ---------- 四年級：數字密碼門 ---------- */
+.numrow{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0 4px}
+.num{min-width:56px;height:56px;padding:0 8px;border-radius:12px;background:#fff;border:2px solid var(--line);display:grid;place-items:center;font-size:1.5rem;font-weight:700;color:var(--ink)}
+.num.q{background:var(--night2);color:var(--gold);border-color:var(--night2)}
+.mach{display:grid;gap:6px;max-width:360px;margin:6px auto}
+.mach div{display:flex;align-items:center;justify-content:center;gap:10px}
+.mach i{font-style:normal;font-size:1.2rem;color:var(--ink2)}
+.numopts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.numopt{min-height:72px;border-radius:16px;border:3px solid var(--line);background:#fff;color:var(--ink);font-size:1.7rem;font-weight:700;cursor:pointer}
+.numopt.right{border-color:var(--teal-d);background:var(--teal-l)}
+
+/* ---------- 四年級：星陣拼圖 ---------- */
+.matrix{width:100%;max-width:340px;display:block;margin:0 auto}
+.shopts.four{grid-template-columns:repeat(4,1fr)}
+
+/* ---------- 四年級：小偵探事務所 ---------- */
+.clues{list-style:none;padding:0;margin:0 0 10px}
+.clues li{background:#fff;border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0;line-height:1.5}
+.clues li.bad{border-color:var(--warn);background:#fbe9e4}
+.clues li.bad:after{content:"　← 再看一次 👀";color:var(--warn);font-weight:700;font-size:.9rem}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.slots.list{grid-template-columns:1fr}
+.slot{min-height:84px;border-radius:14px;border:2px dashed #b9a985;background:#fbf4e6;color:var(--ink);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;font-size:.95rem}
+.slots.list .slot{min-height:52px;flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;padding:8px 12px}
+.slot small{color:var(--ink2);font-size:.78rem;white-space:nowrap}
+.slot.full{border-style:solid;border-color:var(--teal-d);background:#fff}
+.slot .who{font-size:1.9rem;line-height:1}
+.slot.ok{background:var(--teal-l)}
+.pool{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;min-height:56px}
+.pool.list{flex-direction:column}
+.card6{min-height:52px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;padding:6px 12px;font-size:1rem;text-align:left;line-height:1.5}
+.card6 .who{font-size:1.6rem;vertical-align:middle;margin-right:4px}
+.card6[aria-pressed="true"]{border-color:var(--teal-d);background:var(--teal-l);font-weight:700;box-shadow:0 0 0 3px rgba(44,106,91,.25)}
+.dir{text-align:center;color:var(--ink2);font-size:.9rem;margin:2px 0}
 
 /* ---------- 遊戲一：軌道 ---------- */
 .board{width:100%;max-width:420px;display:block;margin:0 auto;touch-action:manipulation;user-select:none}
@@ -376,7 +418,7 @@ table.info th{width:34%;color:var(--ink2);font-weight:500;font-size:.92rem}
    工具箱：CONFIG ── 年度更新只改這一區，不必動遊戲程式
    ========================================================= */
 const CONFIG = {
-  version: 'v15',
+  version: 'v16',
   preview: false,          // true＝開發預覽：顯示待填標記
   school: {
     name: '高雄市莒光國小',
@@ -463,19 +505,33 @@ const BROAD_TIPS = [
 
 const ROUTES = {
   parent:  { label:'我想觀察孩子',  time:'約 2 分鐘',  say:'不用替孩子挑最漂亮的答案，回想您真的看過的情況就好。' },
-  child:   { label:'讓孩子試試看',  time:'4–6 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
+  child:   { label:'讓孩子試試看',  time:'4–8 分鐘',  say:'這裡可以試、可以改，也可以先跳過。準備好就出發！' }
 };
 
 const STATIONS = {
   g1:{ name:'機關修理所', one:'轉一轉，接好星星快遞的軌道', art:'assets/art/scene-repair.webp' },
   g2:{ name:'奇想工坊',   one:'看圖形規律，幫毛球鋪踏石',   art:'assets/art/scene-craft.webp' },
-  g3:{ name:'線索觀星臺', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' }
+  g3:{ name:'線索觀星臺', one:'記住星星亮起的順序',         art:'assets/art/scene-observatory.webp' },
+  g4:{ name:'數字密碼門', one:'找出數字的規律，打開門鎖',   art:'assets/art/scene-repair.webp' },
+  g5:{ name:'星陣拼圖',   one:'看懂九宮格的規律，補上缺的那格', art:'assets/art/scene-craft.webp' },
+  g6:{ name:'小偵探事務所', one:'讀懂線索，把角色和句子放到對的位置', art:'assets/art/scene-treehouse.webp' },
+  g7:{ name:'觀星臺・進階', one:'記住更長的星星順序，還要倒著點', art:'assets/art/scene-observatory.webp' }
 };
+/* 年級分組：哪些站適用哪個年級 */
+const GRADES = {
+  low:{ label:'二年級（低年級）', tag:'適用：二年級', icon:'🌱', st:['g1','g2','g3'], time:'約 4–6 分鐘', desc:'看圖就能玩，不用讀字・3 站' },
+  mid:{ label:'四年級（中年級）', tag:'適用：四年級', icon:'🚀', st:['g4','g5','g6','g7'], time:'約 6–8 分鐘', desc:'有數字和短句，要多想一步・4 站' }
+};
+function gradeOf(st){ return GRADES.mid.st.indexOf(st)>=0 ? 'mid' : 'low'; }
 const TALK = {
   cards:'最近哪一件事，孩子願意一直做下去？可以問問他喜歡的原因。',
   g1:'你怎麼知道哪一塊軌道要轉？',
   g2:'踏石上的圖形，是照什麼規律排的？',
-  g3:'你用什麼方法記住星星亮的順序？'
+  g3:'你用什麼方法記住星星亮的順序？',
+  g4:'你是怎麼找到數字的規律的？',
+  g5:'你是先看形狀、數量，還是顏色？',
+  g6:'哪一條線索最有用？你先從哪一條想起？',
+  g7:'倒著點星星的時候，你用了什麼方法記？'
 };
 
 /* =========================================================
@@ -489,6 +545,11 @@ function fresh(){
     g1:{ level:0, rot:[1,0,0,0,3], solved:[false,false], runs:0, hint:0, hintUsed:false, done:false },
     g2:{ round:0, roundSolved:false, solvedCount:0, done:false },
     g3:{ round:0, roundSolved:false, best:0, views:0, done:false },
+    grade:null,
+    g4:{ round:0, roundSolved:false, solvedCount:0, tries:0, done:false },
+    g5:{ round:0, roundSolved:false, solvedCount:0, tries:0, done:false },
+    g6:{ round:0, roundSolved:false, solvedCount:0, tries:0, place:[], sel:null, bad:[], near:null, done:false },
+    g7:{ round:0, roundSolved:false, best:0, rev:false, views:0, done:false },
     skipped:{}
   };
 }
@@ -515,7 +576,8 @@ const $ = s => document.querySelector(s);
 const main = $('#main');
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function say(t){ const l=$('#live'); l.textContent=''; setTimeout(()=>{ l.textContent=t; },30); }
-function anyProgress(){ return S.cards.some(x=>x!=null) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0; }
+function anyProgress(){ return S.cards.some(x=>x!=null) || S.cardsDone || S.g1.runs>0 || S.g1.rot.join()!=='1,0,0,0,3' || S.g2.solvedCount>0 || S.g3.views>0
+  || S.g4.tries>0 || S.g5.tries>0 || S.g6.tries>0 || S.g6.place.some(x=>x!=null) || S.g7.views>0; }
 // 圖片插槽：圖檔存在就淡入，不存在就保留程式畫的備用圖
 // 換頁後才載入完成的圖片已不在畫面上，要先確認還有外框再處理
 function artOK(img){ const box = img && img.parentElement; if(box) box.classList.add('has-art'); }
@@ -551,7 +613,7 @@ function startBgm(){
 let hist = [];
 function go(screen, opt){
   opt = opt || {};
-  if(S.screen==='g3' && screen!=='g3'){ g3Clear(); g3Phase='idle'; g3Input=[]; }
+  if((S.screen==='g3'||S.screen==='g7') && screen!==S.screen){ g3Clear(); g3Phase='idle'; g3Input=[]; }
   if(opt.push !== false && S.screen && S.screen !== screen) hist.push(S.screen);
   if(hist.length>30) hist.shift();
   S.screen = screen; save(); render();
@@ -559,7 +621,7 @@ function go(screen, opt){
   if(!opt.noFocus) main.focus({preventScroll:true});
 }
 function back(){
-  if(S.screen==='g3'){ g3Clear(); g3Phase='idle'; g3Input=[]; }
+  if(S.screen==='g3'||S.screen==='g7'){ g3Clear(); g3Phase='idle'; g3Input=[]; }
   const p = hist.pop();
   S.screen = p || 'home'; save(); render(); window.scrollTo(0,0);
 }
@@ -647,17 +709,21 @@ AFTER.home = () => { document.body.classList.add('home'); };
 SCREENS.intro = () => {
   const r = ROUTES[S.route] || ROUTES.child;
   const mood = S.route==='child' ? 'happy' : 'guide';
+  const mid = S.grade==='mid';
   const plan = S.route==='parent' ? '每次從題庫隨機抽出 8 題日常情境，四個面向各 2 題，回想孩子最近半年在家裡、出遊或和朋友相處的樣子，選出最接近的頻率。'
+    : mid ? '四個小任務：解數字密碼、補九宮格、讀線索破案、記星星順序。會有數字和短句，想先玩哪一個都可以。'
     : '三個小任務：轉軌道、找規律、記星星。不用讀字，看圖就能玩，想先玩哪一個都可以。';
+  const time = S.route==='child' ? (GRADES[S.grade]||GRADES.low).time.replace('約 ','') : r.time;
   const childNote = S.route==='child' ? `<div class="panel note-adult">
     <h3>給陪伴的大人</h3>
     <p>一般智能資優，是指孩子在記憶、理解、推理、綜合等方面具有潛力。</p>
-    <p>這三個小遊戲用遊戲模擬的方式讓孩子挑戰：機關修理所練習空間推理，奇想工坊找出圖形規律，線索觀星臺考驗記憶。</p>
+    ${mid ? '<p>這四個小遊戲適合四年級：數字密碼門練習數學推理，星陣拼圖要同時看出兩種圖形規律，小偵探事務所要讀懂線索裡的意思再排出答案，觀星臺進階考驗記憶，最後一關還要倒著點。</p>'
+          : '<p>這三個小遊戲適合二年級：機關修理所練習空間推理，奇想工坊找出圖形規律，線索觀星臺考驗記憶。</p>'}
     <p>建議您在旁陪伴，留意孩子處理問題時怎麼想；也可以問問他：「你是怎麼想到的？」聽聽孩子的想法，更能幫助您了解他的潛力。</p>
     <p class="muted" style="margin:0">遊戲結果不代表能力高低，也不是正式鑑定。</p>
   </div>` : '';
   return `${guide(r.say, mood)}${childNote}
-  <div class="panel"><h2>${esc(r.label)}</h2><p>${esc(plan)}</p><p class="muted">大約 ${esc(r.time)}・可以隨時略過或回到首頁</p>
+  <div class="panel"><h2>${esc(r.label)}${S.route==='child'?'｜'+esc((GRADES[S.grade]||GRADES.low).label):''}</h2><p>${esc(plan)}</p><p class="muted">${S.route==='child'?esc((GRADES[S.grade]||GRADES.low).tag)+'・':''}大約 ${esc(time)}・可以隨時略過或回到首頁</p>
   <div class="btns"><button class="btn main" data-act="start">出發</button></div></div>`;
 };
 
@@ -815,14 +881,23 @@ function advocacyHTML(){
   </section>`;
 }
 
+/* ---------- 年級選擇 ---------- */
+SCREENS.grade = () => `${guide('先選孩子的年級，題目難度會不一樣。','guide')}
+  <div class="grades">
+    ${['low','mid'].map(g=>`<button class="grade ${g}" data-act="grade" data-g="${g}"><b>${GRADES[g].icon} ${esc(GRADES[g].label)}</b>
+      <span>${esc(GRADES[g].desc)}・${esc(GRADES[g].time)}</span></button>`).join('')}
+  </div>
+  <p class="muted" style="text-align:center">兩組都可以玩，想挑戰另一組也沒問題。</p>`;
+
 /* ---------- 站點選擇 ---------- */
 SCREENS.picker = () => {
+  const G = GRADES[S.grade] || GRADES.low, other = S.grade==='mid' ? 'low' : 'mid';
   const st = k => S[k].done ? '<span class="tag">完成</span>' : S.skipped[k] ? '<span class="tag gold">略過</span>' : '';
-  return `${guide('三站想先去哪一站都可以。','guide')}
+  return `${guide((G.st.length===4?'四':'三')+'站想先去哪一站都可以。','guide')}
   <div class="stations">
-    ${['g1','g2','g3'].map(k=>`<button class="station" data-act="go" data-to="${k}"><span><b>${STATIONS[k].name}</b>${STATIONS[k].one}</span><span class="st">${st(k)}</span></button>`).join('')}
+    ${G.st.map(k=>`<button class="station" data-act="go" data-to="${k}"><span><b>${STATIONS[k].name}</b>${STATIONS[k].one}<br><span class="tag gr">${esc(G.tag)}</span></span><span class="st">${st(k)}</span></button>`).join('')}
   </div>
-  <div class="btns"><button class="btn ghost" data-act="memento">看今天的紀錄</button></div>`;
+  <div class="btns two"><button class="btn ghost" data-act="memento">看今天的紀錄</button><button class="btn ghost" data-act="grade" data-g="${other}">改玩${esc(GRADES[other].label)}</button></div>`;
 };
 
 /* ---------- 遊戲素材（ChatGPT 圖檔；載入成功才使用，否則用程式畫的備用圖） ---------- */
@@ -835,7 +910,7 @@ const ART_FILES = {
 const ART = {}, ART_FAIL = {};
 let artTimer = null;
 function artSettle(){ clearTimeout(artTimer); artTimer = setTimeout(()=>{
-  if(['g1','g2','g3'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 30); }
+  if(['g1','g2','g3','g7'].indexOf(S.screen)>=0 && !g1Anim && g3Phase!=='show') render(); }, 30); }
 (function preloadArt(){
   Object.keys(ART_FILES).forEach(k=>{
     const src = 'assets/art/' + ART_FILES[k], im = new Image();
@@ -1032,9 +1107,11 @@ const SH = {
   C:{k:'circle',c:'#F4CF87'}, T:{k:'tri',c:'#73B8A5'}, Q:{k:'square',c:'#e07a5f'},
   R:{k:'circle',c:'#e07a5f'}, B:{k:'circle',c:'#5b8fd6'}, G:{k:'circle',c:'#9bd27a'},
   s:{k:'square',c:'#73B8A5',s:.45}, m:{k:'square',c:'#73B8A5',s:.7}, l:{k:'square',c:'#73B8A5',s:.98},
+  rt:{k:'tri',c:'#e07a5f'}, bt:{k:'tri',c:'#5b8fd6'}, gt:{k:'tri',c:'#9bd27a'},
+  rq:{k:'square',c:'#e07a5f'}, bq:{k:'square',c:'#5b8fd6'}, gq:{k:'square',c:'#9bd27a'},
   au:{k:'arrow',c:'#F4CF87',rot:0}, ar:{k:'arrow',c:'#F4CF87',rot:90}, ad:{k:'arrow',c:'#F4CF87',rot:180}, al:{k:'arrow',c:'#F4CF87',rot:270}
 };
-const SHAPE_NAME = { C:'金色圓形', T:'綠色三角形', Q:'紅色方形', R:'紅色圓形', B:'藍色圓形', G:'綠色圓形', s:'小方形', m:'中方形', l:'大方形', au:'向上箭頭', ar:'向右箭頭', ad:'向下箭頭', al:'向左箭頭' };
+const SHAPE_NAME = { C:'金色圓形', T:'綠色三角形', Q:'紅色方形', R:'紅色圓形', B:'藍色圓形', G:'綠色圓形', s:'小方形', m:'中方形', l:'大方形', rt:'紅色三角形', bt:'藍色三角形', gt:'綠色三角形', rq:'紅色方形', bq:'藍色方形', gq:'綠色方形', au:'向上箭頭', ar:'向右箭頭', ad:'向下箭頭', al:'向左箭頭' };
 const G2_ROUNDS = [
   { seq:['C','T','C','T','C'], ans:'T', opts:['C','T','Q'] },
   { seq:['R','B','B','R','B'], ans:'B', opts:['R','G','B'] },
@@ -1095,11 +1172,18 @@ SCREENS.g2 = () => {
    ========================================================= */
 const STARS = [[62,58],[160,36],[258,64],[92,150],[192,128],[272,168]];
 const G3_ROUNDS = [[0,3,4],[1,4,2,5],[5,3,0,1,4]];
+// 四年級觀星臺進階：5 顆、6 顆、倒著點 4 顆
+const G7_ROUNDS = [ { seq:[2,0,4,5,1] }, { seq:[3,1,5,0,4,2] }, { seq:[4,0,5,2], rev:true } ];
+function memK(){ return S.screen==='g7' ? 'g7' : 'g3'; }
+function memRound(k){ k = k||memK(); const g = S[k];
+  if(k==='g7'){ const R = G7_ROUNDS[Math.min(g.round,G7_ROUNDS.length-1)]; return { seq:R.seq, rev:!!R.rev, n:G7_ROUNDS.length }; }
+  return { seq:G3_ROUNDS[Math.min(g.round,G3_ROUNDS.length-1)], rev:false, n:G3_ROUNDS.length }; }
+function memAns(R){ return R.rev ? R.seq.slice().reverse() : R.seq; }
 let g3Phase = 'idle', g3Input = [], g3Timer = [];
 function g3Clear(){ g3Timer.forEach(clearTimeout); g3Timer = []; }
 function skySVG(){
-  const g = S.g3, seq = G3_ROUNDS[Math.min(g.round,G3_ROUNDS.length-1)], solved = g.roundSolved;
-  const pathIdx = solved ? seq : g3Input;
+  const k = memK(), g = S[k], R = memRound(k), seq = R.seq, solved = g.roundSolved;
+  const pathIdx = solved ? memAns(R) : g3Input;
   const line = pathIdx.length>1 ? `<polyline points="${pathIdx.map(i=>STARS[i].join(',')).join(' ')}" fill="none" stroke="#F4CF87" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>` : '';
   const bg = Array.from({length:30},(_,i)=>`<circle cx="${(i*67)%320}" cy="${(i*43)%220}" r="${i%4?0.8:1.3}" fill="#FFF8EB" opacity=".6"/>`).join('');
   return `<svg class="sky" id="sky" viewBox="0 0 320 220" role="group" aria-label="夜空裡的六顆星星">
@@ -1113,9 +1197,10 @@ function skySVG(){
 }
 function g3Light(i, on){ const el = document.querySelector(`[data-star="${i}"]`); if(el) el.classList.toggle('lit', on); }
 function g3Play(){
-  if(g3Phase==='show' || S.g3.roundSolved) return;
-  g3Clear(); g3Input = []; g3Phase = 'show'; S.g3.views++; save(); render();
-  const seq = G3_ROUNDS[S.g3.round], on = 600, gap = 250;
+  const k = memK();
+  if(g3Phase==='show' || S[k].roundSolved) return;
+  g3Clear(); g3Input = []; g3Phase = 'show'; S[k].views++; save(); render();
+  const seq = memRound(k).seq, on = 600, gap = 250;
   seq.forEach((idx,k)=>{
     g3Timer.push(setTimeout(()=>g3Light(idx,true), 400 + k*(on+gap)));
     g3Timer.push(setTimeout(()=>g3Light(idx,false), 400 + k*(on+gap) + on));
@@ -1123,18 +1208,19 @@ function g3Play(){
   g3Timer.push(setTimeout(()=>{ g3Phase='input'; render(); say('換你點了'); }, 400 + seq.length*(on+gap)));
 }
 function g3Tap(i){
-  if(g3Phase!=='input' || S.g3.roundSolved) return;
-  const seq = G3_ROUNDS[S.g3.round];
+  const k = memK(), g = S[k];
+  if(g3Phase!=='input' || g.roundSolved) return;
+  const R = memRound(k), seq = memAns(R);
   g3Input.push(i);
   if(seq[g3Input.length-1] !== i){
     g3Input = []; g3Phase = 'idle'; chime(false); render();
     const sk=$('#sky'); if(sk){ sk.classList.add('wrong'); setTimeout(()=>sk.classList.remove('wrong'),450); }
-    say('順序不一樣，再看一次吧');
+    say(R.rev ? '要從最後一顆倒著點，再看一次吧' : '順序不一樣，再看一次吧');
     return;
   }
   if(g3Input.length === seq.length){
-    S.g3.roundSolved = true; S.g3.best = Math.max(S.g3.best, seq.length);
-    if(S.g3.round===G3_ROUNDS.length-1){ S.g3.done = true; delete S.skipped.g3; }
+    g.roundSolved = true; g.best = Math.max(g.best, seq.length); if(R.rev) g.rev = true;
+    if(g.round===R.n-1){ g.done = true; delete S.skipped[k]; }
     g3Phase = 'idle'; g3Input = []; save(); chime(true); render(); say('全部記住了！');
     return;
   }
@@ -1142,24 +1228,187 @@ function g3Tap(i){
   g3Light(i,true); setTimeout(()=>g3Light(i,false), 300);
   const el = document.querySelector(`[data-star="${i}"]`); if(el) el.focus();
 }
-SCREENS.g3 = () => {
-  const g = S.g3, n = G3_ROUNDS.length, last = g.round===n-1, seq = G3_ROUNDS[Math.min(g.round,n-1)];
+function memScreen(k){
+  const g = S[k], R = memRound(k), n = R.n, last = g.round===n-1, seq = R.seq;
   let btn = '';
-  if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="g3">下一站</button>` : `<button class="btn main" data-act="g3next">下一片星空</button>`;
+  if(g.roundSolved) btn = last ? `<button class="btn main" data-act="next" data-st="${k}">下一站</button>` : `<button class="btn main" data-act="g3next">下一片星空</button>`;
   else if(g3Phase==='show') btn = `<button class="btn main" disabled>看仔細…</button>`;
   else if(g3Phase==='input') btn = `<button class="btn ghost" data-act="g3play">再看一次</button>`;
   else btn = `<button class="btn main" data-act="g3play">${g.views>0?'再看一次':'看星星'}</button>`;
   const fb = g.roundSolved ? (last?'星座連起來了！':'全部記住了！') : g3Phase==='input' ? `已點 ${g3Input.length}／${seq.length}` : '';
-  return `${sceneBanner('線索觀星臺', STATIONS.g3.art, '#1f2c48')}
-  ${guide('星星會一顆一顆亮。看仔細，再照順序點一次！', g.roundSolved?'happy':'think')}
+  const say1 = R.rev ? '這一關要倒著點：從最後亮的那顆，點回第一顆！' : k==='g7' ? `這次有 ${seq.length} 顆星星。看仔細，再照順序點一次！` : '星星會一顆一顆亮。看仔細，再照順序點一次！';
+  return `${sceneBanner(STATIONS[k].name, STATIONS[k].art, '#1f2c48')}
+  ${guide(say1, g.roundSolved?'happy':'think')}
   <div class="panel">
     ${dots(n, g.round, g.roundSolved)}
-    <p class="howto">先看星星亮的順序，再照順序點星星</p>
+    <p class="howto">${R.rev ? '先看星星亮的順序，再<b>倒過來</b>點星星' : '先看星星亮的順序，再照順序點星星'}</p>
     ${skySVG()}
     <div class="fb ok" aria-live="polite">${fb}</div>
     <div class="btns">${btn}</div>
   </div>
-  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g3">略過這一站</button></div>`:''}`;
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="${k}">略過這一站</button></div>`:''}`;
+}
+SCREENS.g3 = () => memScreen('g3');
+SCREENS.g7 = () => memScreen('g7');
+
+
+/* =========================================================
+   守門：四年級 數字密碼門（數學推理）
+   ========================================================= */
+const G4_ROUNDS = [
+  { type:'seq',  seq:[2,4,8,16], ans:32, opts:[20,24,32], hint:'後一個數字，是前一個的幾倍？' },
+  { type:'seq',  seq:[1,3,6,10], ans:15, opts:[14,15,16], hint:'算算看，相鄰兩個數字各差多少？' },
+  { type:'mach', pairs:[[2,5],[4,9],[7,15]], q:10, ans:21, opts:[20,21,23], hint:'放進去的數字先變成兩倍，再看看還差多少。' }
+];
+SCREENS.g4 = () => {
+  const g = S.g4, n = G4_ROUNDS.length, R = G4_ROUNDS[Math.min(g.round,n-1)], last = g.round===n-1;
+  const show = R.type==='seq'
+    ? `<div class="numrow" role="img" aria-label="數字：${R.seq.join('、')}，最後是問號">${R.seq.map(v=>`<div class="num">${v}</div>`).join('')}<div class="num q">${g.roundSolved?R.ans:'？'}</div></div>`
+    : `<div class="mach" role="img" aria-label="魔法機器">${R.pairs.map(p=>`<div><span class="num">${p[0]}</span><i>→ 🎩 →</i><span class="num">${p[1]}</span></div>`).join('')}
+        <div><span class="num">${R.q}</span><i>→ 🎩 →</i><span class="num q">${g.roundSolved?R.ans:'？'}</span></div></div>`;
+  const how = R.type==='seq' ? '找出數字的規律，問號是多少？' : '魔法帽會把放進去的數字變一變。放進 '+R.q+' 會變成多少？';
+  const fb = g.roundSolved ? (last?'門打開了！':'密碼正確！') : (g.miss>=2 ? '提示：'+R.hint : '');
+  return `${sceneBanner(STATIONS.g4.name, STATIONS.g4.art, '#2b3550')}
+  ${guide('門上的密碼有規律。找出問號是哪個數字，門就會打開！', g.roundSolved?'happy':'think')}
+  <div class="panel">
+    ${dots(n, g.round, g.roundSolved)}
+    <p class="howto">${esc(how)}</p>
+    ${show}
+    <div class="numopts" role="group" aria-label="選一個數字">
+      ${R.opts.map(v=>`<button class="numopt ${g.roundSolved&&v===R.ans?'right':''}" data-act="g4pick" data-v="${v}" ${g.roundSolved?'disabled':''}>${v}</button>`).join('')}
+    </div>
+    <div class="fb ${g.roundSolved?'ok':'stop'}" aria-live="polite">${esc(fb)}</div>
+    ${g.roundSolved ? `<div class="btns">${last?`<button class="btn main" data-act="next" data-st="g4">下一站</button>`:`<button class="btn main" data-act="g4next">下一道門</button>`}</div>`:''}
+  </div>
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g4">略過這一站</button></div>`:''}`;
+};
+
+/* =========================================================
+   守門：四年級 星陣拼圖（圖形推理・綜合）
+   格子寫法：'圖形代號' 或 '圖形代號*數量'；null 是空格
+   ========================================================= */
+const G5_ROUNDS = [
+  { grid:[['C','T','Q'],['T','Q','C'],['Q','C',null]], ans:'T', opts:['C','T','Q'],
+    hint:'每一列、每一行裡，圓形、三角形、方形都各出現一次。' },
+  { grid:[['C*1','C*2','C*3'],['T*1','T*2','T*3'],['Q*1','Q*2',null]], ans:'Q*3', opts:['Q*2','T*3','Q*3'],
+    hint:'橫的一列看形狀，直的一行數一數有幾個。' },
+  { grid:[['R','rt','rq'],['B','bt',null],['G','gt','gq']], ans:'bq', opts:['bt','gq','bq','rq'],
+    hint:'顏色看橫的一列，形狀看直的一行。' }
+];
+function cellSVG(spec, cx, cy, size){
+  const m = String(spec).split('*'), k = m[0], n = +(m[1]||1);
+  if(n===1) return shapeSVG(k, cx, cy, size*.78);
+  const sz = size*.42, d = size*.24;
+  const pos = n===2 ? [[-d,0],[d,0]] : [[0,-d],[-d,d*.9],[d,d*.9]];
+  return pos.map(p=>shapeSVG(k, cx+p[0], cy+p[1], sz)).join('');
+}
+function cellName(spec){ const m = String(spec).split('*'); return (m[1]&&m[1]!=='1'?m[1]+' 個':'')+SHAPE_NAME[m[0]]; }
+function matrixSVG(R, solved){
+  const C = 96, G = 6;
+  return `<svg class="matrix" viewBox="0 0 ${C*3+G*4} ${C*3+G*4}" role="img" aria-label="九宮格，右下或中間有一格是問號">
+    <rect width="100%" height="100%" rx="14" fill="#223150"/>
+    ${R.grid.map((row,r)=>row.map((v,c)=>{
+      const x = G+c*(C+G), y = G+r*(C+G), empty = v===null;
+      return `<rect x="${x}" y="${y}" width="${C}" height="${C}" rx="10" fill="${empty?(solved?'#d7ede6':'#2c3d5f'):'#FFF8EB'}" ${empty?'stroke="#F4CF87" stroke-width="3" stroke-dasharray="7 5"':''}/>
+        ${empty ? (solved ? cellSVG(R.ans, x+C/2, y+C/2, C) : `<text x="${x+C/2}" y="${y+C/2+14}" text-anchor="middle" font-size="40" font-weight="700" fill="#F4CF87">?</text>`) : cellSVG(v, x+C/2, y+C/2, C)}`;
+    }).join('')).join('')}
+  </svg>`;
+}
+SCREENS.g5 = () => {
+  const g = S.g5, n = G5_ROUNDS.length, R = G5_ROUNDS[Math.min(g.round,n-1)], last = g.round===n-1;
+  const fb = g.roundSolved ? (last?'星陣完成了！':'拼好了！') : (g.miss>=2 ? '提示：'+R.hint : '');
+  return `${sceneBanner(STATIONS.g5.name, STATIONS.g5.art, '#3a2f3a')}
+  ${guide('九宮格裡藏著規律。哪一個圖案可以補上空格？', g.roundSolved?'happy':'think')}
+  <div class="panel">
+    ${dots(n, g.round, g.roundSolved)}
+    <p class="howto">橫的看一看、直的看一看，再選出空格裡的圖案</p>
+    ${matrixSVG(R, g.roundSolved)}
+    <div class="shopts ${R.opts.length===4?'four':''}" role="group" aria-label="選一個圖案">
+      ${R.opts.map(k=>`<button class="shopt ${g.roundSolved&&k===R.ans?'right':''}" data-act="g5pick" data-k="${k}" aria-label="${esc(cellName(k))}" ${g.roundSolved?'disabled':''}>
+        <svg viewBox="0 0 60 60" aria-hidden="true">${cellSVG(k,30,30,60)}</svg></button>`).join('')}
+    </div>
+    <div class="fb ${g.roundSolved?'ok':'stop'}" aria-live="polite">${esc(fb)}</div>
+    ${g.roundSolved ? `<div class="btns">${last?`<button class="btn main" data-act="next" data-st="g5">下一站</button>`:`<button class="btn main" data-act="g5next">下一個星陣</button>`}</div>`:''}
+  </div>
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g5">略過這一站</button></div>`:''}`;
+};
+
+/* =========================================================
+   守門：四年級 小偵探事務所（語文推理）
+   操作：先點卡片，再點格子；答案只有一種排法
+   ========================================================= */
+const G6_CAST = { bear:{e:'🐻',n:'小熊'}, fox:{e:'🦊',n:'小狐'}, deer:{e:'🦌',n:'小鹿'}, rabbit:{e:'🐰',n:'小兔'} };
+const G6_ROUNDS = [
+  { kind:'who', title:'誰先到？', ask:'四位朋友約在樹屋見面。讀線索，排出他們到的順序。',
+    slots:['第 1 個到','第 2 個到','第 3 個到','第 4 個到'], pool:['rabbit','deer','bear','fox'],
+    clues:[ { t:'🐻 小熊到的時候，小狐還沒來。',            ok:P=>P.bear<P.fox },
+            { t:'🦌 小鹿到的時候，已經有兩位朋友在等他了。', ok:P=>P.deer===2 },
+            { t:'🐰 小兔進門時，大家都已經到齊了。',          ok:P=>P.rabbit===3 } ] },
+  { kind:'who', title:'誰住哪一間？', ask:'四間房子由左到右排成一排。讀線索，幫每位朋友找到家。', dir:true,
+    slots:['最左邊','左邊第 2 間','左邊第 3 間','最右邊'], pool:['bear','rabbit','deer','fox'],
+    clues:[ { t:'🐻 從小熊家往右看，一間房子也沒有。',        ok:P=>P.bear===3 },
+            { t:'🦊 小狐要去小兔家，只要往右走一間就到了。',  ok:P=>P.rabbit===P.fox+1 },
+            { t:'🦌 小鹿說：「我家隔壁不是小熊家。」',        ok:P=>Math.abs(P.deer-P.bear)!==1 } ] },
+  { kind:'story', title:'把故事排回來', ask:'故事的句子被打亂了。看看「原本」「可是」「所以」這些詞，把句子排回原來的順序。',
+    slots:['1','2','3','4','5'],
+    text:{ a:'所以，他只好先躲進路邊的便利商店。', b:'到圖書館時已經晚了二十分鐘，還好書沒有淋濕。',
+           c:'小光原本打算騎腳踏車去圖書館還書。', d:'等雨停了，他才再出發。', e:'可是才騎到半路，天空就下起大雨。' },
+    pool:['a','b','c','d','e'], ans:['c','e','a','d','b'] }
+];
+function g6R(){ return G6_ROUNDS[Math.min(S.g6.round, G6_ROUNDS.length-1)]; }
+function g6Fit(){ const R = g6R(); if(S.g6.place.length!==R.slots.length) S.g6.place = R.slots.map(()=>null); }
+function g6Label(R, id){ return R.kind==='story' ? R.text[id] : G6_CAST[id].n; }
+function g6Card(R, id){ return R.kind==='story' ? esc(R.text[id]) : `<span class="who">${G6_CAST[id].e}</span>${esc(G6_CAST[id].n)}`; }
+function g6Check(){
+  const g = S.g6, R = g6R();
+  if(g.place.some(x=>x==null)){ g.msg = '還有空格沒放好喔。'; return; }
+  g.tries++;
+  if(R.kind==='who'){
+    const P = {}; g.place.forEach((id,i)=>{ P[id] = i; });
+    g.bad = R.clues.map((c,i)=>c.ok(P)?-1:i).filter(i=>i>=0);
+    g.msg = g.bad.length ? '有線索還沒對上，亮起來的那條再讀一次。' : '';
+  } else {
+    g.near = g.place.filter((id,i)=>id===R.ans[i]).length;
+    g.msg = g.near===R.ans.length ? '' : `有 ${g.near} 個句子的位置是對的，再想想其他句子。`;
+  }
+  const solved = R.kind==='who' ? g.bad.length===0 : g.near===R.ans.length;
+  if(solved){
+    g.roundSolved = true; g.msg = ''; g.solvedCount = Math.max(g.solvedCount, g.round+1);
+    if(g.round===G6_ROUNDS.length-1){ g.done = true; delete S.skipped.g6; }
+    chime(true); say('破案了！');
+  } else { chime(false); say(g.msg); }
+}
+SCREENS.g6 = () => {
+  g6Fit();
+  const g = S.g6, n = G6_ROUNDS.length, R = g6R(), last = g.round===n-1, story = R.kind==='story';
+  const left = R.pool.filter(id=>g.place.indexOf(id)<0);
+  const clues = R.clues ? `<ul class="clues">${R.clues.map((c,i)=>`<li class="${g.bad.indexOf(i)>=0?'bad':''}">${esc(c.t)}</li>`).join('')}</ul>` : '';
+  const slots = `<div class="slots ${story?'list':''}" role="group" aria-label="答案格子">${R.slots.map((lab,i)=>{
+      const id = g.place[i];
+      return `<button class="slot ${id?'full':''} ${g.roundSolved?'ok':''}" data-act="g6slot" data-i="${i}" ${g.roundSolved?'disabled':''}
+        aria-label="${esc(story?'第 '+lab+' 句':lab)}：${id?esc(g6Label(R,id)):'空的'}">
+        ${story ? `<small>${esc(lab)}</small>${id?esc(R.text[id]):'<span class="muted">點這裡放句子</span>'}`
+                : `${R.dir?'<span class="who">🏠</span>':''}${id?`<span class="who">${G6_CAST[id].e}</span>${esc(G6_CAST[id].n)}`:'<span class="muted">放這裡</span>'}<small>${esc(lab)}</small>`}
+      </button>`; }).join('')}</div>`;
+  const pool = g.roundSolved ? '' : `<p class="muted" style="margin:10px 0 0;text-align:center">${story?'先點一個句子，再點上面的格子':'先點一位朋友，再點上面的格子'}</p>
+    <div class="pool ${story?'list':''}" role="group" aria-label="可以放的卡片">${left.map(id=>`<button class="card6" data-act="g6pick" data-id="${id}" aria-pressed="${g.sel===id}">${g6Card(R,id)}</button>`).join('') || '<span class="muted">全部放好了，按「確認」看看對不對。</span>'}</div>`;
+  const fb = g.roundSolved ? (last?'三個案子都破了！':'破案了！') : (g.msg||'');
+  return `${sceneBanner(STATIONS.g6.name, STATIONS.g6.art, '#2a3a55')}
+  ${guide('偵探要把線索讀仔細，話裡藏著答案喔！', g.roundSolved?'happy':'think')}
+  <div class="panel">
+    ${dots(n, g.round, g.roundSolved)}
+    <h3>${esc(R.title)}</h3>
+    <p>${esc(R.ask)}</p>
+    ${clues}
+    ${R.dir?'<p class="dir">左 ⬅️　　　　➡️ 右</p>':''}
+    ${slots}
+    ${pool}
+    <div class="fb ${g.roundSolved?'ok':'stop'}" aria-live="polite">${esc(fb)}</div>
+    <div class="btns ${g.roundSolved?'':'two'}">${g.roundSolved
+      ? (last?`<button class="btn main" data-act="next" data-st="g6">下一站</button>`:`<button class="btn main" data-act="g6next">下一個案子</button>`)
+      : `<button class="btn plain" data-act="g6clear">全部拿回來</button><button class="btn main" data-act="g6check">確認</button>`}</div>
+  </div>
+  ${!g.done ? `<div class="btns"><button class="link" data-act="skipst" data-st="g6">略過這一站</button></div>`:''}`;
 };
 
 /* ---------- 探索紀念卡 ---------- */
@@ -1176,14 +1425,22 @@ function memoData(){
   const n2 = S.g2.solvedCount;
   if(n2>0) did.push(`鋪好 ${n2} 顆踏石${S.g2.done?'，毛球過河了':''}`);
   if(S.g3.best>0) did.push(`記住 ${S.g3.best} 顆星星亮起的順序`);
+  if(S.g4.solvedCount>0) did.push(`解開 ${S.g4.solvedCount} 道數字密碼`);
+  if(S.g5.solvedCount>0) did.push(`補好 ${S.g5.solvedCount} 個星陣九宮格`);
+  if(S.g6.solvedCount>0) did.push(`破解 ${S.g6.solvedCount} 個偵探案子`);
+  if(S.g7.best>0) did.push(`在觀星臺進階記住 ${S.g7.best} 顆星星的順序${S.g7.rev?'，也能倒著點回來':''}`);
   if(S.cardsDone && (S.route!=='child')) talk.push(TALK.cards);
-  ['g1','g2','g3'].forEach(k=>{ if(S[k].done) talk.push(TALK[k]); });
+  ['g1','g2','g3','g4','g5','g6','g7'].forEach(k=>{ if(S[k].done) talk.push(TALK[k]); });
   return { parent, did, free:[], talk, showParent: S.cardsDone || S.cards.some(x=>x!=null) };
 }
 SCREENS.memento = () => {
   const d = memoData();
   const empty = !d.parent.length && !d.did.length && !S.cardsDone;
-  const lamps = [['樹屋',S.cardsDone],['修理所',S.g1.done],['工坊',S.g2.done],['觀星臺',S.g3.done]];
+  const lowOn = S.grade!=='mid' || S.g1.runs>0 || S.g2.solvedCount>0 || S.g3.views>0;
+  const midOn = S.grade==='mid' || S.g4.tries>0 || S.g5.tries>0 || S.g6.tries>0 || S.g7.views>0;
+  const lamps = [['樹屋',S.cardsDone]]
+    .concat(lowOn ? [['修理所',S.g1.done],['工坊',S.g2.done],['觀星臺',S.g3.done]] : [])
+    .concat(midOn ? [['密碼門',S.g4.done],['星陣',S.g5.done],['偵探社',S.g6.done],['觀星進階',S.g7.done]] : []);
   return `<div class="lamps" aria-label="已探索的建築">${lamps.map(l=>`<div class="lamp ${l[1]?'on':''}"><i></i>${l[0]}</div>`).join('')}</div>
   ${empty ? guide('下次可以從任一站開始。','guide') : guide('今天的燈亮起來了！','happy')}
   <div class="memo" id="memo">
@@ -1268,7 +1525,7 @@ SCREENS.enroll = () => {
    ========================================================= */
 function nextStation(cur){
   if(cur) S.skipped[cur] = S.skipped[cur] && !S[cur].done;
-  const left = ['g1','g2','g3'].filter(k=>!S[k].done && !S.skipped[k] && k!==cur);
+  const left = GRADES[gradeOf(cur)].st.filter(k=>!S[k].done && !S.skipped[k] && k!==cur);
   go(left.length ? left[0] : 'memento');
 }
 /* 題庫抽題：四個面向各抽 PER_DIM 題，兩輪交錯排列，讓各面向平均分散 */
@@ -1283,7 +1540,7 @@ function newQset(){
 }
 function startRoute(){
   if(S.route==='parent'){ newQset(); save(); go('cards'); }
-  else go('picker');
+  else go(S.grade ? 'picker' : 'grade');
 }
 let cardLock = false;
 function finishCards(){
@@ -1307,15 +1564,17 @@ function openSettings(){
 function act(el){
   const a = el.dataset.act;
   switch(a){
-    case 'route': S.route = el.dataset.r; save(); go('intro'); break;
+    case 'route': S.route = el.dataset.r; save(); go(S.route==='child' ? 'grade' : 'intro'); break;
+    case 'grade': S.grade = el.dataset.g; S.route = 'child'; save(); if(S.screen==='picker') render(); else go('intro'); break;
     case 'start': startRoute(); break;
     case 'go': go(el.dataset.to); break;
     case 'spot': {
       const to = el.dataset.to;
       if(!S.route) S.route = to==='cards' ? 'parent' : 'child';
+      if(to!=='cards' && to!=='courses' && !S.grade) S.grade = 'low';
       if(to==='cards' && (S.cardsDone || !S.qset || !S.qset.length)) newQset();
       save(); go(to); break; }
-    case 'tochild': S.route='child'; save(); go('picker'); break;
+    case 'tochild': S.route='child'; save(); go(S.grade ? 'picker' : 'grade'); break;
     case 'memento': go('memento'); break;
     case 'restart': confirmRestart(); break;
     case 'doRestart': { const r=S.route; S = fresh(); g1Last=null; g3Clear(); g3Phase='idle'; hist=[]; save(); closeModal(); go('home',{push:false}); break; }
@@ -1363,9 +1622,35 @@ function act(el){
       break; }
     case 'g2next': S.g2.round++; S.g2.roundSolved = false; save(); render(); main.focus(); break;
 
+    case 'g4pick': case 'g5pick': {
+      const k = a==='g4pick' ? 'g4' : 'g5', g = S[k], RR = (k==='g4'?G4_ROUNDS:G5_ROUNDS)[g.round];
+      const v = k==='g4' ? +el.dataset.v : el.dataset.k;
+      g.tries++;
+      if(v===RR.ans){
+        g.roundSolved = true; g.miss = 0; g.solvedCount = Math.max(g.solvedCount, g.round+1);
+        if(g.round===(k==='g4'?G4_ROUNDS:G5_ROUNDS).length-1){ g.done = true; delete S.skipped[k]; }
+        save(); chime(true); render(); say('答對了');
+      } else {
+        g.miss = (g.miss||0)+1; save(); chime(false);
+        if(g.miss===2){ render(); }
+        else { el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); }
+        say(g.miss>=2 ? '給你一個提示' : '再想想看');
+      }
+      break; }
+    case 'g4next': case 'g5next': { const k = a==='g4next'?'g4':'g5'; S[k].round++; S[k].roundSolved=false; S[k].miss=0; save(); render(); main.focus(); break; }
+
+    case 'g6pick': { const g=S.g6; if(g.roundSolved) break; g.sel = g.sel===el.dataset.id ? null : el.dataset.id; save(); render(); break; }
+    case 'g6slot': {
+      const g=S.g6, i=+el.dataset.i; if(g.roundSolved) break; g6Fit();
+      if(g.sel){ g.place[i] = g.sel; g.sel = null; } else if(g.place[i]) g.place[i] = null;
+      g.bad = []; g.near = null; g.msg = ''; save(); render(); break; }
+    case 'g6clear': { const g=S.g6; g.place = g6R().slots.map(()=>null); g.sel=null; g.bad=[]; g.near=null; g.msg=''; save(); render(); break; }
+    case 'g6check': g6Check(); save(); render(); break;
+    case 'g6next': { const g=S.g6; g.round++; g.roundSolved=false; g.place=g6R().slots.map(()=>null); g.sel=null; g.bad=[]; g.near=null; g.msg=''; save(); render(); main.focus(); break; }
+
     case 'g3play': g3Play(); break;
     case 'g3tap': g3Tap(+el.dataset.i); break;
-    case 'g3next': g3Clear(); g3Phase='idle'; g3Input=[]; S.g3.round++; S.g3.roundSolved=false; S.g3.views=0; save(); render(); main.focus(); break;
+    case 'g3next': { const k=memK(); g3Clear(); g3Phase='idle'; g3Input=[]; S[k].round++; S[k].roundSolved=false; S[k].views=0; save(); render(); main.focus(); break; }
 
     case 'download': downloadMemo(); break;
   }
@@ -1441,7 +1726,7 @@ window.addEventListener('error', ev=>{ if(ev.target && ev.target.tagName==='IMG'
 
 /* ---------- 測試積木：給自動測試呼叫 ---------- */
 window.__GAME = {
-  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, strengthText: ()=>strengthText(parentProfile()), gcalUrl, reminderYear, go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
+  state: ()=>JSON.parse(JSON.stringify(S)), profile: ()=>parentProfile(), CARDS, strengthText: ()=>strengthText(parentProfile()), gcalUrl, reminderYear, go, simulate, openings, memoData, CONFIG, G1_LEVELS, G2_ROUNDS, G3_ROUNDS, G4_ROUNDS, G5_ROUNDS, G6_ROUNDS, G7_ROUNDS, GRADES, g3:()=>({phase:g3Phase,input:g3Input.slice()}),
   setRot: a=>{ S.g1.rot=a.slice(); g1Last=null; save(); render(); },
   run: runG1, reset: ()=>{ S=fresh(); hist=[]; g1Last=null; save(); render(); }
 };
